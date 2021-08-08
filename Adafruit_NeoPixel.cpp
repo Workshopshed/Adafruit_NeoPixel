@@ -198,6 +198,11 @@ extern "C" void espShow(
 #define KENDRYTE_K210 1
 #endif
 
+#if defined(CORE_CM4)
+extern "C" void  portentaShow(
+    uint8_t pin, uint8_t *pixels, uint32_t numBytes, boolean is800KHz);
+#endif
+
 #if defined(KENDRYTE_K210)
 extern "C" void  k210Show(
     uint8_t pin, uint8_t *pixels, uint32_t numBytes, boolean is800KHz);
@@ -1155,6 +1160,9 @@ void Adafruit_NeoPixel::show(void) {
 #if defined(ARDUINO_ARCH_RP2040)
   // Use PIO
   rp2040Show(pin, pixels, numBytes, is800KHz);
+
+#elif defined(CORE_CM4)
+    portentaShow(pin, pixels, numBytes, is800KHz);
 
 #elif defined(TEENSYDUINO) && defined(KINETISK) // Teensy 3.0, 3.1, 3.2, 3.5, 3.6
 #define CYCLES_800_T0H  (F_CPU / 4000000)
