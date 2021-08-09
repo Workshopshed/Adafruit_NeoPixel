@@ -1,10 +1,6 @@
 // Based on the k210 and esp variants of this library  
 // As we are on MBed for the Portenta we can utilise the timing libraries from that platform
-#if defined(CORE_CM4) 
-#define PORTENTA_NEOPIX 1
-#endif
-
-#if defined(PORTENTA_NEOPIX)
+#if defined(ARDUINO_PORTENTA_H7_M7)
 
 #include <stdbool.h>	// Erroring in Arduino.h without this include
 #include <mbed.h>
@@ -81,4 +77,4 @@ MX_GPIO_Init();
         ; // Wait for last bit
 }
 
-#endif // PORTENTA_NEOPIX
+#endif // ARDUINO_PORTENTA_H7_M7
