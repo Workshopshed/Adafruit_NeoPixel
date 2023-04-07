@@ -204,7 +204,7 @@ extern "C" void espShow(
 #define KENDRYTE_K210 1
 #endif
 
-#if defined(ARDUINO_PORTENTA_H7_M7)
+#if defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4)
 extern "C" void  portentaShow(
     GPIO_TypeDef* gpioPort, uint32_t gpioPin, int16_t pin, uint8_t *pixels, uint16_t numBytes, boolean is800KHz);
 #endif 
@@ -1167,7 +1167,7 @@ void Adafruit_NeoPixel::show(void) {
   // Use PIO
   rp2040Show(pin, pixels, numBytes, is800KHz);
 
-#elif defined(ARDUINO_PORTENTA_H7_M7)
+#elif defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4)
     portentaShow(gpioPort, gpioPin, pin,  pixels, numBytes, is800KHz);
 
 #elif defined(TEENSYDUINO) && defined(KINETISK) // Teensy 3.0, 3.1, 3.2, 3.5, 3.6
@@ -2265,7 +2265,7 @@ void Adafruit_NeoPixel::setPin(int16_t p) {
     pinMode(p, OUTPUT);
     digitalWrite(p, LOW);
   }
-#if defined(ARDUINO_PORTENTA_H7_M7)
+#if defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4)
   uint8_t portIndex = ((digitalPinToPinName(pin) & 0xF0) >> 4);
   switch (portIndex){
     case 0:

@@ -49,7 +49,7 @@
   #include <Arduino.h>
 #endif
 
-#if defined(ARDUINO_PORTENTA_H7_M7)
+#if defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4)
 #if __has_include (<pinDefinitions.h>)
 #include <pinDefinitions.h>
 #endif
@@ -382,7 +382,7 @@ class Adafruit_NeoPixel {
   volatile uint8_t *port;       ///< Output PORT register
   uint8_t           pinMask;    ///< Output PORT bitmask
 #endif
-#if defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_ARDUINO_CORE_STM32) || defined(ARDUINO_PORTENTA_H7_M7)
+#if defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_ARDUINO_CORE_STM32) || defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4)
   GPIO_TypeDef *gpioPort;       ///< Output GPIO PORT
   uint32_t gpioPin;             ///< Output GPIO PIN
 #endif
