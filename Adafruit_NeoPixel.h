@@ -49,6 +49,12 @@
   #include <Arduino.h>
 #endif
 
+#if defined(ARDUINO_PORTENTA_H7_M7)
+#if __has_include (<pinDefinitions.h>)
+#include <pinDefinitions.h>
+#endif
+#endif
+
 // The order of primary colors in the NeoPixel data stream can vary among
 // device types, manufacturers and even different revisions of the same
 // item.  The third parameter to the Adafruit_NeoPixel constructor encodes
@@ -203,6 +209,9 @@ class Adafruit_NeoPixel {
   // Constructor: number of LEDs, pin number, LED type
   Adafruit_NeoPixel(uint16_t n, int16_t pin=6,
     neoPixelType type=NEO_GRB + NEO_KHZ800);
+  Adafruit_NeoPixel(uint16_t n, PinName pin,
+    neoPixelType type=NEO_GRB + NEO_KHZ800);
+	
   Adafruit_NeoPixel(void);
   ~Adafruit_NeoPixel();
 
@@ -373,7 +382,7 @@ class Adafruit_NeoPixel {
   volatile uint8_t *port;       ///< Output PORT register
   uint8_t           pinMask;    ///< Output PORT bitmask
 #endif
-#if defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_ARDUINO_CORE_STM32)
+#if defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_ARDUINO_CORE_STM32) || defined(ARDUINO_PORTENTA_H7_M7)
   GPIO_TypeDef *gpioPort;       ///< Output GPIO PORT
   uint32_t gpioPin;             ///< Output GPIO PIN
 #endif
