@@ -83,6 +83,12 @@ Adafruit_NeoPixel::Adafruit_NeoPixel(uint16_t n, int16_t p, neoPixelType t) :
   updateLength(n);
   setPin(p);
 }
+Adafruit_NeoPixel::Adafruit_NeoPixel(uint16_t n, PinName p, neoPixelType t) :
+  begun(false), brightness(0), pixels(NULL), endTime(0) {
+  updateType(t);
+  updateLength(n);
+  setPin(PinNameToIndex(p));
+}
 
 /*!
   @brief   "Empty" NeoPixel constructor when length, pin and/or pixel type
@@ -198,10 +204,10 @@ extern "C" void espShow(
 #define KENDRYTE_K210 1
 #endif
 
-#if defined(ARDUINO_PORTENTA_H7_M7)
+#if defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4)
 extern "C" void  portentaShow(
-    uint8_t pin, uint8_t *pixels, uint32_t numBytes, boolean is800KHz);
-#endif
+    GPIO_TypeDef* gpioPort, uint32_t gpioPin, int16_t pin, uint8_t *pixels, uint16_t numBytes, boolean is800KHz);
+#endif 
 
 #if defined(KENDRYTE_K210)
 extern "C" void  k210Show(
@@ -1161,8 +1167,8 @@ void Adafruit_NeoPixel::show(void) {
   // Use PIO
   rp2040Show(pin, pixels, numBytes, is800KHz);
 
-#elif defined(ARDUINO_PORTENTA_H7_M7)
-    portentaShow(pin, pixels, numBytes, is800KHz);
+#elif defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4)
+    portentaShow(gpioPort, gpioPin, pin,  pixels, numBytes, is800KHz);
 
 #elif defined(TEENSYDUINO) && defined(KINETISK) // Teensy 3.0, 3.1, 3.2, 3.5, 3.6
 #define CYCLES_800_T0H  (F_CPU / 4000000)
@@ -2259,6 +2265,41 @@ void Adafruit_NeoPixel::setPin(int16_t p) {
     pinMode(p, OUTPUT);
     digitalWrite(p, LOW);
   }
+#if defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4)
+  uint8_t portIndex = ((digitalPinToPinName(pin) & 0xF0) >> 4);
+  switch (portIndex){
+    case 0:
+      gpioPort = GPIOA;
+      break;
+    case 1:
+      gpioPort = GPIOB;
+      break;
+    case 2:
+      gpioPort = GPIOC;
+      break;
+    case 3:
+      gpioPort = GPIOD;
+      break;
+    case 4:
+      gpioPort = GPIOE;
+      break;
+    case 5:
+      gpioPort = GPIOF;
+      break;
+    case 6:
+      gpioPort = GPIOG;
+      break;
+    case 7:
+      gpioPort = GPIOH;
+      break;
+    case 8:
+      gpioPort = GPIOI;
+      break;
+    default:
+      break;
+  }
+  gpioPin = (1 << (digitalPinToPinName(p) & 0x0F));
+#endif
 #if defined(__AVR__)
   port    = portOutputRegister(digitalPinToPort(p));
   pinMask = digitalPinToBitMask(p);
