@@ -402,11 +402,6 @@ extern "C" void espShow(uint16_t pin, uint8_t *pixels, uint32_t numBytes,
 #define KENDRYTE_K210 1
 #endif
 
-#if defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4)
-extern "C" void  portentaShow(
-    GPIO_TypeDef* gpioPort, uint32_t gpioPin, int16_t pin, uint8_t *pixels, uint16_t numBytes, boolean is800KHz);
-#endif 
-
 #if defined(KENDRYTE_K210)
 extern "C" void k210Show(uint8_t pin, uint8_t *pixels, uint32_t numBytes,
                          boolean is800KHz);
